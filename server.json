@@ -1,0 +1,17 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-06-18/server.schema.json",
+  "name": "io.github.whoogy/whoogy-mcp",
+  "description": "Compare Figma designs against live websites and get visual + content QA reports, from inside Claude.",
+  "version": "0.1.0",
+  "repository": {
+    "url": "https://github.com/whoogy/whoogy-mcp",
+    "source": "github"
+  },
+  "websiteUrl": "https://whoogy.com",
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://mcp.whoogy.com/mcp"
+    }
+  ]
+}

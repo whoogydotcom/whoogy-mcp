@@ -1,0 +1,35 @@
+{
+  "name": "whoogy-mcp",
+  "version": "0.1.0",
+  "private": false,
+  "description": "Whoogy's remote MCP server — compare Figma designs against live websites from inside Claude.",
+  "type": "module",
+  "license": "MIT",
+  "homepage": "https://whoogy.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/whoogy/whoogy-mcp"
+  },
+  "scripts": {
+    "dev": "nodemon --watch src --watch .env --ext ts,env --exec tsx src/server.ts",
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/server.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.30.0",
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.9.0",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21",
+    "@types/jsonwebtoken": "^9.0.7",
+    "@types/node": "^20.14.0",
+    "nodemon": "^3.1.7",
+    "tsx": "^4.19.2",
+    "typescript": "^5.6.3"
+  }
+}
