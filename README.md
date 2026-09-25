@@ -1,8 +1,25 @@
-# Whoogy MCP Server
+# Whoogy MCP Server — Figma to Website Design QA for Claude
 
-Compare a Figma design against its live website from inside Claude — spacing, typography, color, layout, and missing-element differences, reported page by page.
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
+[![MCP Server](https://img.shields.io/badge/MCP-Server-blue)](https://modelcontextprotocol.io)
+[![Works with Claude](https://img.shields.io/badge/Works%20with-Claude-6b46c1)](https://claude.ai)
 
-Whoogy is a design-QA tool: point it at a Figma file and a live URL, and it tells you where the build has drifted from the design. This MCP server exposes that as a set of tools Claude can call directly, so you can run a scan and read the report without leaving the chat.
+**Fastest Figma-to-website design QA, powered by AI.** This MCP server connects Claude to Whoogy to auto-detect pages, run automated visual regression and UI comparison scans, and deliver a full design QA report in minutes — catching spacing, typography, color, and layout drift before launch, without leaving your conversation.
+
+## What is Whoogy MCP?
+
+Whoogy compares a **Figma design against its live website** and reports exactly where the build has drifted from the design — pixel-level spacing errors, wrong fonts, mismatched colors, missing sections, broken layouts. This repository is the **Model Context Protocol (MCP) server** that exposes that Figma vs. live-site comparison as tools Claude can call directly, so a full design QA scan runs and reports back inside your AI chat instead of a separate app or browser plugin.
+
+If you're searching for **Figma to code QA**, **design QA automation**, **visual regression testing for Figma**, or a **Claude MCP server for design review**, this is it.
+
+## Why an MCP server instead of a Figma plugin?
+
+Most Figma-to-live-site QA tools are overlay plugins — you open Figma, open the live site, and eyeball the difference manually, page by page. Whoogy MCP flips that:
+
+- **Automatic page discovery** — give it a Figma file and a live root URL; it matches Figma frames to live routes on its own.
+- **No context switching** — ask Claude to run the scan, review the report, and re-run it, all in the same conversation.
+- **Structured findings, not just screenshots** — every issue is categorized by severity (critical → low) and type (spacing, typography, color, layout, missing element), not just a visual diff image.
+- **Minutes, not hours** — a full multi-page comparison report comes back in minutes, so design QA can run on every deploy, not just before a big launch.
 
 ## Connect it to Claude
 
@@ -41,6 +58,26 @@ Typical flow: `start_scan` → poll `get_scan_status` → `list_discovered_pages
 
 Claude registers itself as an OAuth client (RFC 7591) and runs a standard authorization-code + PKCE flow against this server. `/authorize` redirects your browser to Whoogy's own consent page; once you approve with your normal Whoogy sign-in, the long-lived Whoogy JWT that flow mints becomes the MCP access token, verbatim — there's no separate token system to manage. There are no refresh tokens: the access token is a 60-day JWT, and Claude re-runs the (fast) authorization flow once it expires.
 
+## Frequently asked questions
+
+**What does this MCP server actually compare?**
+A Figma file (or specific frames) against a live website's rendered pages — layout, spacing, typography, color, and content, page by page.
+
+**How is this different from a pixel-overlay Figma plugin?**
+An overlay plugin needs a human to look at each page and spot differences. This server discovers pages automatically and returns a structured, severity-ranked report Claude can read, summarize, and act on.
+
+**How long does a scan take?**
+Discovery and comparison run as background jobs; a typical multi-page report comes back within minutes of confirming which pages to run.
+
+**Is my data shared with other users?**
+No. Every tool call runs as your signed-in Whoogy account via OAuth — reports, credits, and projects are scoped to your account only.
+
+**Which AI assistants can use this?**
+Any MCP client that supports remote, OAuth-authenticated HTTP servers — Claude.ai, Claude Desktop, and other MCP-compatible tools (Cursor, VS Code Copilot, etc.).
+
+**Does it cost anything to run a scan?**
+Comparisons spend Whoogy credits (one per page compared). `check_credits` reports your balance before you commit to a run.
+
 ## Self-hosting
 
 This server is stateless per request (a fresh `McpServer` + transport per HTTP call) and talks to the main Whoogy REST API over HTTP as the signed-in user — it holds no product data of its own. It shares its OAuth-grant and device-code collections with the main Whoogy API's MongoDB, so it isn't meant to be pointed at a different backend; self-hosting only makes sense if you're running the rest of Whoogy yourself too.
@@ -52,6 +89,11 @@ npm run dev
 ```
 
 See `.env.example` for what each variable does. `MCP_PUBLIC_URL` must be a publicly reachable HTTPS URL for any remote client (claude.ai, etc.) to connect — plain HTTP only works for purely local testing.
+
+## Learn more
+
+- Whoogy: [https://whoogy.com](https://whoogy.com)
+- Model Context Protocol: [https://modelcontextprotocol.io](https://modelcontextprotocol.io)
 
 ## License
 
